@@ -17,4 +17,4 @@ CUDA_VISIBLE_DEVICES=0 python main.py --dataset cifar100 --data_dir data/cifar10
 
 CUDA_VISIBLE_DEVICES=0 python main.py --dataset cifar100 --data_dir data/cifar100/ --root_dir experiments/ --labels_per_class 500 --arch wrn28_10  --learning_rate 0.1 --momentum 0.9 --decay 0.0001 --epochs 400 --schedule 200 300 --gammas 0.1 0.1 --train mixup --mixup_alpha 1.0 --random_rate 0.55 --class_num 100
 
-CUDA_VISIBLE_DEVICES=0 python main.py --dataset cifar100 --data_dir data/cifar100/ --root_dir experiments/ --labels_per_class 500 --arch wrn28_10  --learning_rate 0.1 --momentum 0.9 --decay 0.0001 --epochs 400 --schedule 200 300 --gammas 0.1 0.1 --train mixup --mixup_alpha 1.0 --random_rate 0.50 --class_num 100
+# CUDA_VISIBLE_DEVICES=0 python main.py --dataset cifar100 --data_dir data/cifar100/ --root_dir experiments/ --labels_per_class 500 --arch wrn28_10  --learning_rate 0.1 --momentum 0.9 --decay 0.0001 --epochs 400 --schedule 200 300 --gammas 0.1 0.1 --train mixup --mixup_alpha 1.0 --random_rate 0.50 --class_num 100

@@ -200,6 +200,14 @@ mse_loss = nn.MSELoss().cuda()
 
 
 # +
+# import numpy as np
+
+# target = [1] * 100
+# change_prob = 0.95
+
+# sum(np.random.randint(0,10000, len(target)) >= (10000*(1-change_prob)))
+
+# +
 def train(train_loader, model, optimizer, epoch, args, log):
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -215,10 +223,9 @@ def train(train_loader, model, optimizer, epoch, args, log):
     end = time.time()
     for i, (input, target) in enumerate(train_loader):
         
-        import copy
         if change_prob > 0:
-            porb_ones = np.random.randint(0,10000, len(target)) // (10000*(1-change_prob)) >0 
-            change_target = (target + torch.randint(0, class_num, (len(target),)) * porb_ones) % class_num
+            prob_ones = np.random.randint(0,10000, len(target)) >= (10000*(1-change_prob))
+            target = (target + torch.randint(0, class_num, (len(target),)) * prob_ones) % class_num
 
 #             print(target)
 #             exit(True)
