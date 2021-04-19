@@ -81,7 +81,7 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path
 parser.add_argument('--start_epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 # Acceleration
-parser.add_argument('--ngpu', type=int, default=1, help='0 = CPU.')
+parser.add_argument('--ngpu', type=int, default=2, help='0 = CPU.')
 parser.add_argument('--workers', type=int, default=2, help='number of data loading workers (default: 2)')
 # random seed
 parser.add_argument('--manualSeed', type=int, help='manual seed')
@@ -414,7 +414,7 @@ def main():
     print_log("=> network :\n {}".format(net), log)
     args.num_classes = num_classes
 
-    #net = torch.nn.DataParallel(net, device_ids=list(range(args.ngpu)))
+    net = torch.nn.DataParallel(net, device_ids=list(range(args.ngpu)))
 
     optimizer = torch.optim.SGD(net.parameters(), state['learning_rate'], momentum=state['momentum'],
                 weight_decay=state['decay'], nesterov=True)
@@ -450,8 +450,14 @@ def main():
     test_loss=[]
     test_acc=[]
     
+    not_update_best = 0
+    
     
     for epoch in range(args.start_epoch, args.epochs):
+        if not_update_best >15:
+            break
+        not_update_best +=1
+
         current_learning_rate = adjust_learning_rate(optimizer, epoch, args.gammas, args.schedule)
 
         need_hour, need_mins, need_secs = convert_secs2time(epoch_time.avg * (args.epochs-epoch))
@@ -479,6 +485,7 @@ def main():
         if val_acc > best_acc:
             is_best = True
             best_acc = val_acc
+            not_update_best = 0
 
         save_checkpoint({
           'epoch': epoch + 1,
@@ -503,7 +510,7 @@ def main():
                    
         pickle.dump(train_log, open( os.path.join(exp_dir,'log.pkl'), 'wb'))
         plotting(exp_dir)
-    
+        
     log.close()
 
 
