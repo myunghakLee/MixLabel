@@ -357,6 +357,7 @@ def validate(val_loader, model, log):
 
   return top1.avg, losses.avg
 
+# +
 best_acc = 0
 def main():
 
@@ -414,7 +415,7 @@ def main():
     print_log("=> network :\n {}".format(net), log)
     args.num_classes = num_classes
 
-    net = torch.nn.DataParallel(net, device_ids=list(range(args.ngpu)))
+#     net = torch.nn.DataParallel(net, device_ids=list(range(args.ngpu)))
 
     optimizer = torch.optim.SGD(net.parameters(), state['learning_rate'], momentum=state['momentum'],
                 weight_decay=state['decay'], nesterov=True)
@@ -512,6 +513,7 @@ def main():
         plotting(exp_dir)
         
     log.close()
+# -
 
 
 if __name__ == '__main__':
