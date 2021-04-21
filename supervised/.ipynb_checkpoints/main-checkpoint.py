@@ -453,14 +453,13 @@ def main():
     
     not_update_best = 0
     
+    chance = 0
     
     for epoch in range(args.start_epoch, args.epochs):
-        if not_update_best >15:
-            break
-        not_update_best +=1
-
         current_learning_rate = adjust_learning_rate(optimizer, epoch, args.gammas, args.schedule)
-
+        if chance >0 and epoch < 200:
+            current_learning_rate/=10
+        
         need_hour, need_mins, need_secs = convert_secs2time(epoch_time.avg * (args.epochs-epoch))
         need_time = '[Need: {:02d}:{:02d}:{:02d}]'.format(need_hour, need_mins, need_secs)
 
@@ -482,6 +481,16 @@ def main():
 
         dummy = recorder.update(epoch, tr_los, tr_acc, val_los, val_acc)
 
+        
+        
+        if not_update_best >15 or (val_acc < (best_acc / 0.75) and not_update_best > 5):
+            not_update_best = 0
+            if chance > 0:
+                break
+            chance +=1
+
+        not_update_best +=1        
+        
         is_best = False
         if val_acc > best_acc:
             is_best = True
